@@ -2,17 +2,18 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shopping_app/halamanutama.dart';
+import 'package:shopping_app/view/main/bar_navigasi.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class DaftarAkun extends StatefulWidget {
+  const DaftarAkun({super.key});
   static const id = "/login";
 
   @override
-  State<Login> createState() => _LoginState();
+  State<DaftarAkun> createState() => _DaftarAkunState();
 }
 
-class _LoginState extends State<Login> {
+class _DaftarAkunState extends State<DaftarAkun> {
+  final TextEditingController namaController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isPasswordHidden = true;
@@ -32,7 +33,7 @@ class _LoginState extends State<Login> {
                   height: 50,
                   width: double.infinity,
                   child: Text(
-                    "Halo!, Selamat Datang 👋",
+                    "Halo!, Selamat Daftar 👋",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                   ),
                 ),
@@ -48,11 +49,21 @@ class _LoginState extends State<Login> {
 
                 SizedBox(height: 20),
 
+                SizedBox(width: double.infinity, child: Text("Nama Pengguna")),
+                SizedBox(height: 10),
+                TextFormField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
 
                   child: Text(
-                    "Nama Pengguna",
+                    "Email",
                     style: TextStyle(fontWeight: FontWeight.w200),
                   ),
                 ),
@@ -113,22 +124,6 @@ class _LoginState extends State<Login> {
                   },
                 ),
 
-                InkWell(
-                  onTap: () {
-                    print("Lupa bang");
-                  },
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "Lupa Password?",
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 145, 57, 105),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
                 SizedBox(height: 20),
                 SizedBox(
                   height: 50,
@@ -167,7 +162,8 @@ class _LoginState extends State<Login> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const FirstPage(),
+                                        builder: (context) =>
+                                            const MainScreen(),
                                       ),
                                     );
                                   },
@@ -187,9 +183,7 @@ class _LoginState extends State<Login> {
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    "Silahkan masukkan email/password yang valid",
-                                  ),
+                                  Text("Silahkan masukkan email/password"),
                                   SizedBox(height: 20),
                                   Lottie.asset(
                                     "assets/images/animations/Fail.json",
@@ -212,7 +206,7 @@ class _LoginState extends State<Login> {
                     },
 
                     child: Text(
-                      "Masuk",
+                      "Daftar",
                       style: TextStyle(
                         color: const Color.fromARGB(255, 2, 2, 2),
                       ),
@@ -286,11 +280,11 @@ class _LoginState extends State<Login> {
                   alignment: Alignment.topLeft,
                   child: Text.rich(
                     TextSpan(
-                      text: "Belum punya akun? ",
+                      text: "Sudah punya akun? ",
                       style: TextStyle(color: Colors.black),
                       children: [
                         TextSpan(
-                          text: "Daftar Sekarang",
+                          text: "Masuk Sekarang",
                           style: TextStyle(
                             color: const Color.fromARGB(255, 145, 57, 105),
                             fontWeight: FontWeight.bold,
@@ -305,9 +299,9 @@ class _LoginState extends State<Login> {
                   ),
                 ),
 
-                Lottie.asset(
-                  "assets/images/animations/Shopping Cart Loader.json",
-                ),
+                // Lottie.asset(
+                //   "assets/images/animations/Shopping Cart Loader.json",
+                // ),
               ],
             ),
           ),
