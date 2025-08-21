@@ -12,7 +12,7 @@ class Pengguna {
   });
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'nama': username, 'email': email, 'password': password};
+    return {'id': id, 'username': username, 'email': email, 'password': password};
   }
 
   factory Pengguna.fromMap(Map<String, dynamic> map) {

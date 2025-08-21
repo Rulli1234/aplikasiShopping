@@ -15,10 +15,10 @@ class DbHelper {
         );
 
         await db.execute(
-          'CREATE TABLE ShoppingItem(id INTEGER PRIMARY KEY, nama TEXT, jumlah INTEGER, catatan TEXT)',
+          'CREATE TABLE shoppingItem(id INTEGER PRIMARY KEY, nama TEXT, kategori TEXT, catatan TEXT)',
         );
       },
-      version: 1,
+      version: 2,
     );
   }
 
@@ -31,6 +31,20 @@ class DbHelper {
     );
   }
 
+    static Future<Pengguna?> loginUser(String email, String password) async {
+    final db = await databaseHelper();
+    final List<Map<String, dynamic>> results = await db.query(
+      'daftar',
+      where: 'email = ? AND password = ?',
+      whereArgs: [email, password],
+    );
+
+     if (results.isNotEmpty) {
+      return Pengguna.fromMap(results.first);
+    }
+    return null;
+  }
+
   static Future<List<Pengguna>> getAllPengguna() async {
     final db = await databaseHelper();
     final List<Map<String, dynamic>> maps = await db.query('daftar');
@@ -40,7 +54,7 @@ class DbHelper {
   static Future<void> insertShoppingItem(ShoppingItem shoppingitem) async {
     final db = await databaseHelper();
     await db.insert(
-      'ShoppingItem',
+      'shoppingItem',
       shoppingitem.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -48,7 +62,19 @@ class DbHelper {
 
   static Future<List<ShoppingItem>> getAllShoppingItem() async {
     final db = await databaseHelper();
-    final List<Map<String, dynamic>> maps = await db.query('ShoppingItem');
-    return List.generate(maps.length, (i) => ShoppingItem.fromMap(maps[i]));
+    final List<Map<String, dynamic>> results = await db.query('shoppingItem');
+    return results.map((e) => ShoppingItem.fromMap(e)).toList();
+  }
+
+  static Future<void> updateShoppingItem(ShoppingItem shoppingitem) async{
+    final db = await databaseHelper();
+    await db.update('shoppingItem', shoppingitem.toMap(),
+    where: "id = ?",
+    conflictAlgorithm: ConflictAlgorithm.replace
+    );
+  }
+  static Future<void> deleteShoppingItem(int id) async {
+    final db = await databaseHelper();
+    await db.delete('shoppingitem', where: "id = ?", whereArgs: [id]);
   }
 }

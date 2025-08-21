@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/view/main/about/about.dart';
 import 'package:shopping_app/view/main/home/add_list.dart';
 import 'package:shopping_app/view/main/home/home.dart';
 
@@ -14,6 +15,8 @@ class _MainScreenState extends State<MainScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     AddShoppingPage(),
+    AboutPage()
+    
   ];
 
   @override

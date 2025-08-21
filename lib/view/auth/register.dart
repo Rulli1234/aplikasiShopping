@@ -2,6 +2,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shopping_app/model/model_pengguna.dart';
+import 'package:shopping_app/sqflite/db_helper.dart';
 import 'package:shopping_app/view/main/bar_navigasi.dart';
 
 class DaftarAkun extends StatefulWidget {
@@ -13,7 +15,7 @@ class DaftarAkun extends StatefulWidget {
 }
 
 class _DaftarAkunState extends State<DaftarAkun> {
-  final TextEditingController namaController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isPasswordHidden = true;
@@ -52,6 +54,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
                 SizedBox(width: double.infinity, child: Text("Nama Pengguna")),
                 SizedBox(height: 10),
                 TextFormField(
+                  controller: usernameController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -69,6 +72,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
                 ),
                 SizedBox(height: 10),
                 TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -98,6 +102,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
                 SizedBox(height: 10),
 
                 TextFormField(
+                  controller: passwordController,
                   obscureText: _isPasswordHidden,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -136,9 +141,15 @@ class _DaftarAkunState extends State<DaftarAkun> {
                       ),
                     ),
 
-                    onPressed: () {
+                    onPressed: () async{
                       if (_formKey.currentState!.validate()) {
                         // TAMPILKAN DIALOG BERHASIL
+                        final penggunaBaru = Pengguna(
+                          username: usernameController.text, 
+                          email: emailController.text, 
+                          password: passwordController.text);
+
+                          await DbHelper.insertPengguna(penggunaBaru);
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -276,6 +287,23 @@ class _DaftarAkunState extends State<DaftarAkun> {
                 //     ),
                 //   ],
                 // ),
+
+                SizedBox(height: 10),
+
+ElevatedButton(
+  style: ButtonStyle(
+    backgroundColor: WidgetStateProperty.all<Color>(Colors.amber),
+  ),
+  onPressed: () async {
+    final db = await DbHelper.databaseHelper();
+    final List<Map<String, dynamic>> result = await db.query('daftar');
+    print("🔥 DEBUG - DATA DI TABEL:");
+    for (var row in result) {
+      print(row);
+    }
+  },
+  child: Text("🔍 Debug: Cek Isi DB"),
+),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Text.rich(

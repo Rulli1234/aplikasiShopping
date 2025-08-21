@@ -11,6 +11,7 @@ class AddShoppingPage extends StatefulWidget {
 
 class _AddShoppingPageState extends State<AddShoppingPage> {
   final _formKey = GlobalKey<FormState>();
+  final _kategoriController = TextEditingController();
   final _namaController = TextEditingController();
   final _catatanController = TextEditingController();
 
@@ -30,46 +31,51 @@ class _AddShoppingPageState extends State<AddShoppingPage> {
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _namaController,
-                decoration: const InputDecoration(labelText: "Nama Barang"),
-                validator: (value) =>
-                    value!.isEmpty ? "Harap isi nama barang" : null,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: _kategori,
-                decoration: const InputDecoration(labelText: "Kategori"),
-                items: kategoriList
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
-                onChanged: (value) => setState(() => _kategori = value),
-                validator: (value) => value == null ? "Pilih kategori" : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _catatanController,
-                decoration: const InputDecoration(labelText: "Catatan"),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final newItem = ShoppingItem(
-                      nama: _namaController.text,
-                      kategori: _kategori!,
-                      catatan: _catatanController.text,
-                    );
-                    await DbHelper.insertShoppingItem(newItem);
-                    Navigator.pop(context, newItem);
-                  }
-                },
-                child: const Text("Simpan"),
-              ),
-            ],
+          child: SingleChildScrollView( // ⬅️ Perbaikan disini
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _namaController,
+                  decoration: const InputDecoration(labelText: "Nama Barang"),
+                  validator: (value) =>
+                      value!.isEmpty ? "Harap isi nama barang" : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: _kategori,
+                  decoration: const InputDecoration(labelText: "Kategori"),
+                  items: kategoriList
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .toList(),
+                  onChanged: (value) => setState(() => _kategori = value),
+                  validator: (value) =>
+                      value == null ? "Pilih kategori" : null,
+                ),
+                const SizedBox(height: 16),
+                
+                TextFormField(
+                  controller: _catatanController,
+                  decoration: const InputDecoration(labelText: "Catatan"),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      final newItem = ShoppingItem(
+                        nama: _namaController.text,
+                        kategori: _kategori!,
+                        catatan: _catatanController.text,
+                      );
+                      await DbHelper.insertShoppingItem(newItem);
+                      Navigator.pop(context, newItem);
+                    }
+                  },
+                  child: const Text("Simpan"),
+                ),
+              ],
+            ),
           ),
         ),
       ),
