@@ -15,8 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     AddShoppingPage(),
-    AboutPage()
-    
+    AboutPage(),
   ];
 
   @override
@@ -33,11 +32,14 @@ class _MainScreenState extends State<MainScreen> {
             // activeIcon: Icon(Icons.abc_outlined),
           ),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Tambah'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_box), label: 'Akun'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Pengaturan',
+          ),
         ],
 
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: const Color.fromARGB(255, 240, 200, 241),
         unselectedItemColor: Colors.black,
         onTap: (value) {
           print(value);

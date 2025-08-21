@@ -72,6 +72,7 @@ flutter:
     - assets/images/animations/Shopping Cart Loader.json
     - assets/images/animations/successgraduation.json
     - assets/images/animations/Fail.json
+    - assets/images/animations/Welcome.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

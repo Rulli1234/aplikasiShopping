@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shopping_app/extension/navigation.dart';
+import 'package:shopping_app/shared_preferences/shared_preferences.dart';
+import 'package:shopping_app/view/auth/login.dart';
+import 'package:shopping_app/view/main/bar_navigasi.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,12 +21,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void isLogin() async {
-    // bool? isLogin = await PreferenceHandler.getLogin();
+    bool? isLogin = await PreferenceHandler.getLogin();
 
-    // Future.delayed(Duration(seconds: 5)).then((value) async {
-    // //   context.push(Login());
-    // // );
+    Future.delayed(Duration(seconds: 5)).then((value) async {
+      print(isLogin);
+      if (isLogin == true) {
+        context.pushReplacementNamed(MainScreen.id);
+      } else {
+        context.push(Login());
+      }
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

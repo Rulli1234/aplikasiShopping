@@ -2,6 +2,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shopping_app/extension/navigation.dart';
+import 'package:shopping_app/shared_preferences/shared_preferences.dart';
+import 'package:shopping_app/sqflite/db_helper.dart';
 import 'package:shopping_app/view/auth/register.dart';
 import 'package:shopping_app/view/main/bar_navigasi.dart';
 
@@ -14,11 +17,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final TextEditingController namaController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isPasswordHidden = true;
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,24 +54,6 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-
-                  child: Text(
-                    "Nama Pengguna",
-                    style: TextStyle(fontWeight: FontWeight.w200),
-                  ),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  width: double.infinity,
-
                   child: Text(
                     "Email",
                     style: TextStyle(fontWeight: FontWeight.w200),
@@ -76,6 +61,7 @@ class _LoginState extends State<Login> {
                 ),
                 SizedBox(height: 10),
                 TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -105,6 +91,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 10),
 
                 TextFormField(
+                  controller: passwordController,
                   obscureText: _isPasswordHidden,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -159,74 +146,81 @@ class _LoginState extends State<Login> {
                       ),
                     ),
 
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // TAMPILKAN DIALOG BERHASIL
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Berhasil"),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(height: 50),
-                                  Lottie.asset(
-                                    "assets/images/animations/successgraduation.json",
-                                    width: 90,
-                                    height: 100,
-                                    fit: BoxFit.cover,
+                        // Check login credentials with database
+                        final user = await DbHelper.loginUser(
+                          emailController.text,
+                          passwordController.text,
+                        );
+
+                        if (user != null) {
+                          // TAMPILKAN DIALOG BERHASIL
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Berhasil"),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(height: 50),
+                                    Lottie.asset(
+                                      "assets/images/animations/successgraduation.json",
+                                      width: 90,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text("OK"),
                                   ),
                                 ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text("OK"),
+                              );
+                            },
+                          );
+                        } else {
+                          // TAMPILKAN DIALOG GAGAL
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("GAGAL"),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text("Email atau password salah"),
+                                    SizedBox(height: 20),
+                                    Lottie.asset(
+                                      "assets/images/animations/Fail.json",
+                                      width: 90,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        // TAMPILKAN DIALOG GAGAL
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("GAGAL"),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "Silahkan masukkan email/password yang valid",
-                                  ),
-                                  SizedBox(height: 20),
-                                  Lottie.asset(
-                                    "assets/images/animations/Fail.json",
-                                    width: 90,
-                                    height: 100,
-                                    fit: BoxFit.cover,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: Text("OK"),
                                   ),
                                 ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                              );
+                            },
+                          );
+                        }
                       }
                     },
 
@@ -239,68 +233,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
 
-                // Lottie.asset(
-                //   "assets/images/animations/Shopping Cart Loader.json",
-                // ),
-                // Text.rich(
-                //   TextSpan(
-                //     text: "Don't have an acoount? ",
-                //     style: TextStyle(color: Colors.black),
-                //     children: [
-                //       TextSpan(
-                //         text: "Sign up",
-                //         style: TextStyle(
-                //           color: Colors.deepOrange,
-                //           fontWeight: FontWeight.bold,
-                //         ),
-                //         recognizer: TapGestureRecognizer()
-                //           ..onTap = () {
-                //             print("Sign up");
-                //           },
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 10),
-                // Row(
-                //   children: [
-                //     Expanded(child: Divider()),
-                //     SizedBox(width: 8),
-                //     Text("Or Sign In With"),
-                //     SizedBox(width: 8),
-                //     Expanded(child: Divider()),
-                //   ],
-                // ),
-
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: ElevatedButton.icon(
-                //         style: ButtonStyle(elevation: WidgetStatePropertyAll(0)),
-                //         onPressed: () {},
-                //         icon: Image.asset(
-                //           'assets/images/google.jpg',
-                //           height: 30,
-                //           width: 24,
-                //         ),
-                //         label: Text("google"),
-                //       ),
-                //     ),
-                //     SizedBox(width: 20),
-                //     Expanded(
-                //       child: ElevatedButton.icon(
-                //         style: ButtonStyle(elevation: WidgetStatePropertyAll(0)),
-                //         onPressed: () {},
-                //         icon: Image.asset(
-                //           'assets/images/fesbuk.png',
-                //           height: 30,
-                //           width: 24,
-                //         ),
-                //         label: Text("Facebook"),
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Text.rich(
@@ -338,5 +271,27 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Email dan Password tidak boleh kosong")),
+      );
+      // isLoading = false;
+
+      return;
+    }
+    final userData = await DbHelper.loginUser(email, password);
+    if (userData != null) {
+      PreferenceHandler.saveLogin();
+      context.pushReplacementNamed(login());
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Email atau Password salah")),
+      );
+    }
   }
 }

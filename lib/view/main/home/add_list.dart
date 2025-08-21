@@ -11,7 +11,6 @@ class AddShoppingPage extends StatefulWidget {
 
 class _AddShoppingPageState extends State<AddShoppingPage> {
   final _formKey = GlobalKey<FormState>();
-  final _kategoriController = TextEditingController();
   final _namaController = TextEditingController();
   final _catatanController = TextEditingController();
 
@@ -23,15 +22,69 @@ class _AddShoppingPageState extends State<AddShoppingPage> {
     "Pakaian",
   ];
 
+  // Fungsi untuk menyimpan data
+  Future<void> _simpanData() async {
+    if (_formKey.currentState!.validate() && _kategori != null) {
+      final newItem = ShoppingItem(
+        nama: _namaController.text,
+        kategori: _kategori!,
+        catatan: _catatanController.text,
+      );
+
+      try {
+        await DbHelper.insertShoppingItem(newItem);
+
+        // Tampilkan snackbar sebagai feedback bahwa data tersimpan
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Data berhasil disimpan!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        // Reset form
+        _formKey.currentState!.reset();
+        _namaController.clear();
+        _catatanController.clear();
+        setState(() {
+          _kategori = null;
+        });
+      } catch (e) {
+        // Tampilkan error jika gagal menyimpan
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal menyimpan data: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } else {
+      // Tampilkan pesan jika kategori belum dipilih
+      if (_kategori == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Harap pilih kategori!'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Tambah Belanja")),
+      appBar: AppBar(
+        title: const Text("Tambah Belanja"),
+        backgroundColor: const Color.fromARGB(255, 243, 191, 227),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView( // ⬅️ Perbaikan disini
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -49,30 +102,21 @@ class _AddShoppingPageState extends State<AddShoppingPage> {
                       .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                       .toList(),
                   onChanged: (value) => setState(() => _kategori = value),
-                  validator: (value) =>
-                      value == null ? "Pilih kategori" : null,
+                  validator: (value) => value == null ? "Pilih kategori" : null,
                 ),
                 const SizedBox(height: 16),
-                
                 TextFormField(
                   controller: _catatanController,
                   decoration: const InputDecoration(labelText: "Catatan"),
-                  maxLines: 2,
+                  maxLines: 3,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final newItem = ShoppingItem(
-                        nama: _namaController.text,
-                        kategori: _kategori!,
-                        catatan: _catatanController.text,
-                      );
-                      await DbHelper.insertShoppingItem(newItem);
-                      Navigator.pop(context, newItem);
-                    }
-                  },
-                  child: const Text("Simpan"),
+                  onPressed: _simpanData,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text("Simpan", style: TextStyle(fontSize: 16)),
                 ),
               ],
             ),
@@ -80,5 +124,12 @@ class _AddShoppingPageState extends State<AddShoppingPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _namaController.dispose();
+    _catatanController.dispose();
+    super.dispose();
   }
 }

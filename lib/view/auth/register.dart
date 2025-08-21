@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shopping_app/model/model_pengguna.dart';
 import 'package:shopping_app/sqflite/db_helper.dart';
-import 'package:shopping_app/view/main/bar_navigasi.dart';
 
 class DaftarAkun extends StatefulWidget {
   const DaftarAkun({super.key});
-  static const id = "/login";
+  static const id = "/register";
 
   @override
   State<DaftarAkun> createState() => _DaftarAkunState();
@@ -20,6 +19,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
   final TextEditingController passwordController = TextEditingController();
   bool _isPasswordHidden = true;
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +60,12 @@ class _DaftarAkunState extends State<DaftarAkun> {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Nama pengguna tidak boleh kosong";
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 10),
                 SizedBox(
@@ -125,6 +131,9 @@ class _DaftarAkunState extends State<DaftarAkun> {
                     if (value == null || value.isEmpty) {
                       return "Password tidak boleh kosong";
                     }
+                    if (value.length < 6) {
+                      return "Password minimal 6 karakter";
+                    }
                     return null;
                   },
                 ),
@@ -141,15 +150,17 @@ class _DaftarAkunState extends State<DaftarAkun> {
                       ),
                     ),
 
-                    onPressed: () async{
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // TAMPILKAN DIALOG BERHASIL
                         final penggunaBaru = Pengguna(
-                          username: usernameController.text, 
-                          email: emailController.text, 
-                          password: passwordController.text);
+                          username: usernameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
 
-                          await DbHelper.insertPengguna(penggunaBaru);
+                        await DbHelper.insertPengguna(penggunaBaru);
+
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -165,48 +176,16 @@ class _DaftarAkunState extends State<DaftarAkun> {
                                     height: 100,
                                     fit: BoxFit.cover,
                                   ),
+                                  SizedBox(height: 20),
+                                  Text("Akun berhasil dibuat"),
                                 ],
                               ),
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainScreen(),
-                                      ),
-                                    );
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
                                   },
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        // TAMPILKAN DIALOG GAGAL
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("GAGAL"),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("Silahkan masukkan email/password"),
-                                  SizedBox(height: 20),
-                                  Lottie.asset(
-                                    "assets/images/animations/Fail.json",
-                                    width: 90,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
                                   child: Text("OK"),
                                 ),
                               ],
@@ -225,85 +204,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
                   ),
                 ),
 
-                // Lottie.asset(
-                //   "assets/images/animations/Shopping Cart Loader.json",
-                // ),
-                // Text.rich(
-                //   TextSpan(
-                //     text: "Don't have an acoount? ",
-                //     style: TextStyle(color: Colors.black),
-                //     children: [
-                //       TextSpan(
-                //         text: "Sign up",
-                //         style: TextStyle(
-                //           color: Colors.deepOrange,
-                //           fontWeight: FontWeight.bold,
-                //         ),
-                //         recognizer: TapGestureRecognizer()
-                //           ..onTap = () {
-                //             print("Sign up");
-                //           },
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 10),
-                // Row(
-                //   children: [
-                //     Expanded(child: Divider()),
-                //     SizedBox(width: 8),
-                //     Text("Or Sign In With"),
-                //     SizedBox(width: 8),
-                //     Expanded(child: Divider()),
-                //   ],
-                // ),
-
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: ElevatedButton.icon(
-                //         style: ButtonStyle(elevation: WidgetStatePropertyAll(0)),
-                //         onPressed: () {},
-                //         icon: Image.asset(
-                //           'assets/images/google.jpg',
-                //           height: 30,
-                //           width: 24,
-                //         ),
-                //         label: Text("google"),
-                //       ),
-                //     ),
-                //     SizedBox(width: 20),
-                //     Expanded(
-                //       child: ElevatedButton.icon(
-                //         style: ButtonStyle(elevation: WidgetStatePropertyAll(0)),
-                //         onPressed: () {},
-                //         icon: Image.asset(
-                //           'assets/images/fesbuk.png',
-                //           height: 30,
-                //           width: 24,
-                //         ),
-                //         label: Text("Facebook"),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                SizedBox(height: 10),
-
-ElevatedButton(
-  style: ButtonStyle(
-    backgroundColor: WidgetStateProperty.all<Color>(Colors.amber),
-  ),
-  onPressed: () async {
-    final db = await DbHelper.databaseHelper();
-    final List<Map<String, dynamic>> result = await db.query('daftar');
-    print("🔥 DEBUG - DATA DI TABEL:");
-    for (var row in result) {
-      print(row);
-    }
-  },
-  child: Text("🔍 Debug: Cek Isi DB"),
-),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Text.rich(
@@ -319,17 +220,13 @@ ElevatedButton(
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              print("Join Us");
+                              Navigator.pop(context);
                             },
                         ),
                       ],
                     ),
                   ),
                 ),
-
-                // Lottie.asset(
-                //   "assets/images/animations/Shopping Cart Loader.json",
-                // ),
               ],
             ),
           ),
