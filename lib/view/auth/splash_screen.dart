@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void isLogin() async {
     bool? isLogin = await PreferenceHandler.getLogin();
 
-    Future.delayed(Duration(seconds: 5)).then((value) async {
+    Future.delayed(Duration(seconds: 2)).then((value) async {
       print(isLogin);
       if (isLogin == true) {
         context.pushReplacementNamed(MainScreen.id);
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Lottie.asset("assets/images/animations/List.json"),
             SizedBox(height: 20),
-            Text("Selamat Datang!"),
+            Text("Kuy Belanja Brother"),
           ],
         ),
       ),

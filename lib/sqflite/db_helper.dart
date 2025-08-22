@@ -1,7 +1,7 @@
 // import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:shopping_app/model/model_pengguna.dart';
-import 'package:shopping_app/model/model_shopping.dart';
+import 'package:shopping_app/model/user.dart';
+import 'package:shopping_app/model/belanja.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
@@ -22,7 +22,7 @@ class DbHelper {
     );
   }
 
-  static Future<void> insertPengguna(Pengguna pengguna) async {
+  static Future<void> insertPengguna(User pengguna) async {
     final db = await databaseHelper();
     await db.insert(
       'daftar',
@@ -31,7 +31,7 @@ class DbHelper {
     );
   }
 
-    static Future<Pengguna?> loginUser(String email, String password) async {
+  static Future<User?> loginUser(String email, String password) async {
     final db = await databaseHelper();
     final List<Map<String, dynamic>> results = await db.query(
       'daftar',
@@ -39,16 +39,16 @@ class DbHelper {
       whereArgs: [email, password],
     );
 
-     if (results.isNotEmpty) {
-      return Pengguna.fromMap(results.first);
+    if (results.isNotEmpty) {
+      return User.fromMap(results.first);
     }
     return null;
   }
 
-  static Future<List<Pengguna>> getAllPengguna() async {
+  static Future<List<User>> getAllPengguna() async {
     final db = await databaseHelper();
     final List<Map<String, dynamic>> maps = await db.query('daftar');
-    return List.generate(maps.length, (i) => Pengguna.fromMap(maps[i]));
+    return List.generate(maps.length, (i) => User.fromMap(maps[i]));
   }
 
   static Future<void> insertShoppingItem(ShoppingItem shoppingitem) async {
@@ -66,13 +66,16 @@ class DbHelper {
     return results.map((e) => ShoppingItem.fromMap(e)).toList();
   }
 
-  static Future<void> updateShoppingItem(ShoppingItem shoppingitem) async{
+  static Future<void> updateShoppingItem(ShoppingItem shoppingitem) async {
     final db = await databaseHelper();
-    await db.update('shoppingItem', shoppingitem.toMap(),
-    where: "id = ?",
-    conflictAlgorithm: ConflictAlgorithm.replace
+    await db.update(
+      'shoppingItem',
+      shoppingitem.toMap(),
+      where: "id = ?",
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
   static Future<void> deleteShoppingItem(int id) async {
     final db = await databaseHelper();
     await db.delete('shoppingitem', where: "id = ?", whereArgs: [id]);

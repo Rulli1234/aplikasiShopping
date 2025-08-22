@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_app/model/model_shopping.dart';
+import 'package:shopping_app/model/belanja.dart';
 import 'package:shopping_app/sqflite/db_helper.dart';
 
 class AddShoppingPage extends StatefulWidget {

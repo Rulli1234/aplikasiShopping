@@ -2,7 +2,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shopping_app/model/model_pengguna.dart';
+import 'package:shopping_app/model/user.dart';
 import 'package:shopping_app/sqflite/db_helper.dart';
 
 class DaftarAkun extends StatefulWidget {
@@ -153,7 +153,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // TAMPILKAN DIALOG BERHASIL
-                        final penggunaBaru = Pengguna(
+                        final penggunaBaru = User(
                           username: usernameController.text,
                           email: emailController.text,
                           password: passwordController.text,
