@@ -15,10 +15,7 @@ class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Pengaturan"),
-        backgroundColor: const Color.fromARGB(255, 243, 191, 227),
-      ),
+      appBar: AppBar(title: Text("Pengaturan"), backgroundColor: Colors.white),
 
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -28,9 +25,7 @@ class _AboutPageState extends State<AboutPage> {
               child: Container(
                 height: 180,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 246, 202, 252),
-                ),
+                decoration: BoxDecoration(color: Colors.white),
                 child: Center(
                   child: Lottie.asset(
                     'assets/images/animations/Welcome.json',

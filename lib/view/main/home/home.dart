@@ -125,8 +125,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Daftar Belanja"),
-        backgroundColor: const Color.fromARGB(255, 243, 191, 227),
+        title: Text("Daftar Belanja"),
+        backgroundColor: Colors.white,
       ),
       body: items.isEmpty
           ? const Center(child: Text("Belum ada data"))
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context, int index) {
                 final item = items[index];
                 return Card(
-                  color: const Color.fromARGB(255, 243, 191, 227),
+                  color: Colors.white,
                   margin: const EdgeInsets.all(8),
                   child: ListTile(
                     title: Text(item.nama),

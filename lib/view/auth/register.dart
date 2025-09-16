@@ -215,7 +215,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
                         TextSpan(
                           text: "Masuk Sekarang",
                           style: TextStyle(
-                            color: const Color.fromARGB(255, 145, 57, 105),
+                            color: const Color.fromARGB(255, 5, 236, 36),
                             fontWeight: FontWeight.bold,
                           ),
                           recognizer: TapGestureRecognizer()

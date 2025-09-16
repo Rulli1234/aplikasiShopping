@@ -78,7 +78,7 @@ class _AddShoppingPageState extends State<AddShoppingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Tambah Belanja"),
-        backgroundColor: const Color.fromARGB(255, 243, 191, 227),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

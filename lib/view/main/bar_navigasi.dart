@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
         ],
 
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 240, 200, 241),
+        selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
         onTap: (value) {
           print(value);

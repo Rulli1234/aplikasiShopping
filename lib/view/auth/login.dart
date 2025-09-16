@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
                     child: Text(
                       "Lupa Password?",
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 145, 57, 105),
+                        color: const Color.fromARGB(255, 143, 219, 169),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -142,7 +142,7 @@ class _LoginState extends State<Login> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all<Color>(
-                        const Color.fromARGB(255, 247, 230, 242),
+                        const Color.fromARGB(255, 233, 5, 5),
                       ),
                     ),
 
@@ -244,7 +244,7 @@ class _LoginState extends State<Login> {
                         TextSpan(
                           text: "Daftar Sekarang",
                           style: TextStyle(
-                            color: const Color.fromARGB(255, 145, 57, 105),
+                            color: const Color.fromARGB(255, 233, 3, 3),
                             fontWeight: FontWeight.bold,
                           ),
                           recognizer: TapGestureRecognizer()

@@ -1,7 +1,7 @@
 // import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:shopping_app/model/user.dart';
 import 'package:shopping_app/model/belanja.dart';
+import 'package:shopping_app/model/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
